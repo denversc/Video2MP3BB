@@ -23,6 +23,7 @@ ExcludeFromBuildAll=0
 Exported=0
 [Files
 src\main\java\video2mp3bb\Main.java
+src\main\java\video2mp3bb\Util.java
 ]
 HaveAlxImports=0
 HaveDefs=0
