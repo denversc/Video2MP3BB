@@ -1,2 +1,9 @@
 /target/
 *.swp
+*.cod
+*.csl
+*.cso
+*.debug
+*.jad
+*.jar
+*.rapc
