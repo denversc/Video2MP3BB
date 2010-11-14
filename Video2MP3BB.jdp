@@ -24,6 +24,9 @@ Exported=0
 [Files
 src\main\java\video2mp3bb\Main.java
 src\main\java\video2mp3bb\Util.java
+src\main\java\video2mp3bb\Video2MP3BBApplication.java
+src\main\java\video2mp3bb\Video2MP3Screen.java
+src\main\java\video2mp3bb\Video2MP3ScreenWorkerImpl.java
 ]
 HaveAlxImports=0
 HaveDefs=0

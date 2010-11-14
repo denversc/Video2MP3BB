@@ -21,7 +21,7 @@ public class Main implements Runnable {
     }
 
     public void runNormal() {
-
+        new Video2MP3BBApplication().enterEventDispatcher();
     }
 
     public static void main(String[] args) {
