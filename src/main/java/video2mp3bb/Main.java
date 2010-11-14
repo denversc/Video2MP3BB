@@ -1,5 +1,8 @@
 package video2mp3bb;
 
+import video2mp3bb.runnables.DialogAlertRunnable;
+import video2mp3bb.runnables.PushScreenRunnable;
+
 import net.rim.device.api.system.ApplicationDescriptor;
 import net.rim.device.api.system.ApplicationManager;
 import net.rim.device.api.system.ApplicationManagerException;
@@ -17,6 +20,11 @@ public class Main implements Runnable {
     // video2mp3bb.Main.GUID_SET_URL
     public static final long GUID_SET_URL = 0x7d88cfb7d2e045bcL;
 
+    public static final String ARG_INIT;
+    static {
+        ARG_INIT = "init";
+    }
+
     private final String[] _args;
 
     public Main(String[] args) {
@@ -24,7 +32,7 @@ public class Main implements Runnable {
     }
 
     public void run() {
-        if (this._args != null && this._args.length == 1 && "init".equals(this._args[0])) {
+        if (this._args != null && this._args.length == 1 && ARG_INIT.equals(this._args[0])) {
             this.runInit();
         } else {
             this.runNormal();
@@ -32,24 +40,42 @@ public class Main implements Runnable {
     }
 
     public void runInit() {
-        ApplicationDescriptor descriptor;
-        try {
-            descriptor = getDescriptor();
-        } catch (final Throwable e) {
-            descriptor = null;
-        }
+        final TransientData data = getTransientData();
+        data.setInitStarted();
 
-        final Video2MP3MenuItem menuItem = new Video2MP3MenuItem();
-        final ApplicationMenuItemRepository amir = ApplicationMenuItemRepository.getInstance();
-        amir.addMenuItem(ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem, descriptor);
-        addCleanup(new RemoveApplicationMenuItemRunnable(
-            ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem));
+        try {
+            ApplicationDescriptor descriptor;
+            try {
+                descriptor = getDescriptor(null);
+            } catch (final Throwable e) {
+                descriptor = null;
+            }
+
+            final Video2MP3MenuItem menuItem = new Video2MP3MenuItem();
+            final ApplicationMenuItemRepository amir = ApplicationMenuItemRepository.getInstance();
+            amir.addMenuItem(ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem, descriptor);
+            addCleanup(new RemoveApplicationMenuItemRunnable(
+                ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem));
+
+        } finally {
+            data.setInitCompleted();
+        }
     }
 
     public void runNormal() {
         final Video2MP3BBApplication app = new Video2MP3BBApplication();
+
         final TransientData data = getTransientData();
+        if (!data.isInitStarted()) {
+            try {
+                Main.launchInit();
+            } catch (final Throwable e) {
+                app.invokeLater(new DialogAlertRunnable(e.toString()));
+            }
+        }
+
         data.setApplication(app);
+        app.invokeLater(new PushScreenRunnable(app.getScreen(), app));
         app.enterEventDispatcher();
     }
 
@@ -61,7 +87,8 @@ public class Main implements Runnable {
         data.addCleanup(runnable);
     }
 
-    public static ApplicationDescriptor getDescriptor() throws ApplicationManagerException {
+    public static ApplicationDescriptor getDescriptor(String arg)
+            throws ApplicationManagerException {
         final int handle = CodeModuleManager.getModuleHandleForClass(Main.class);
         String moduleName;
         try {
@@ -86,7 +113,12 @@ public class Main implements Runnable {
                 final ApplicationDescriptor curDescriptor = descriptors[i];
                 if (curDescriptor != null) {
                     final String[] args = curDescriptor.getArgs();
-                    if (args == null || args.length == 0) {
+                    if (arg == null) {
+                        if (args == null || args.length == 0) {
+                            descriptor = curDescriptor;
+                            break;
+                        }
+                    } else if (args != null && args.length > 0 && arg.equals(args[0])) {
                         descriptor = curDescriptor;
                         break;
                     }
@@ -121,12 +153,19 @@ public class Main implements Runnable {
     }
 
     public static boolean launch() throws ApplicationManagerException {
-        final ApplicationDescriptor descriptor = getDescriptor();
+        return launch(null);
+    }
+
+    public static boolean launch(String arg) throws ApplicationManagerException {
+        final ApplicationDescriptor descriptor = getDescriptor(arg);
         final ApplicationManager am = ApplicationManager.getApplicationManager();
         final int pid = am.getProcessId(descriptor);
         am.runApplication(descriptor);
-
         return (pid != -1);
+    }
+
+    public static boolean launchInit() throws ApplicationManagerException {
+        return launch(ARG_INIT);
     }
 
     public static void main(String[] args) {

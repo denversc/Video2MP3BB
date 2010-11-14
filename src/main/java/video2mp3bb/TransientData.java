@@ -6,12 +6,18 @@ import java.util.Vector;
 public class TransientData {
 
     private final Vector _cleanups;
+
     private WeakReference _applicationRef;
     private final Object _applicationRefMutex;
+
+    private boolean _initStarted;
+    private boolean _initCompleted;
+    private final Object _initMutex;
 
     public TransientData() {
         this._cleanups = new Vector();
         this._applicationRefMutex = new Object();
+        this._initMutex = new Object();
     }
 
     public void addCleanup(Runnable runnable) {
@@ -51,6 +57,18 @@ public class TransientData {
         }
     }
 
+    public boolean isInitCompleted() {
+        synchronized (this._initMutex) {
+            return this._initCompleted;
+        }
+    }
+
+    public boolean isInitStarted() {
+        synchronized (this._initMutex) {
+            return this._initStarted;
+        }
+    }
+
     public void setApplication(Video2MP3BBApplication application) {
         final WeakReference ref = new WeakReference(application);
         synchronized (this._applicationRefMutex) {
@@ -58,6 +76,19 @@ public class TransientData {
             if (application != null) {
                 this._applicationRefMutex.notifyAll();
             }
+        }
+    }
+
+    public void setInitCompleted() {
+        synchronized (this._initMutex) {
+            this._initCompleted = true;
+            this._initMutex.notifyAll();
+        }
+    }
+
+    public void setInitStarted() {
+        synchronized (this._initMutex) {
+            this._initStarted = true;
         }
     }
 
@@ -69,6 +100,17 @@ public class TransientData {
             }
             app = this.getApplication();
             return app;
+        }
+    }
+
+    public boolean waitForInitCompleted(long timeout) throws InterruptedException {
+        synchronized (this._initMutex) {
+            boolean result = this.isInitCompleted();
+            if (!result) {
+                this._initMutex.wait(timeout);
+                result = this.isInitCompleted();
+            }
+            return result;
         }
     }
 }

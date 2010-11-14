@@ -23,6 +23,8 @@ ExcludeFromBuildAll=0
 Exported=0
 [Files
 src\main\java\video2mp3bb\Main.java
+src\main\java\video2mp3bb\runnables\DialogAlertRunnable.java
+src\main\java\video2mp3bb\runnables\PushScreenRunnable.java
 src\main\java\video2mp3bb\TransientData.java
 src\main\java\video2mp3bb\Util.java
 src\main\java\video2mp3bb\Video2MP3BBApplication.java

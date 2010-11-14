@@ -17,7 +17,6 @@ public class Video2MP3BBApplication extends UiApplication {
     public Video2MP3BBApplication() {
         final Video2MP3ScreenWorkerImpl worker = new Video2MP3ScreenWorkerImpl();
         this._screen = new Video2MP3Screen(worker);
-        this.pushScreen(this._screen);
     }
 
     public Video2MP3Screen getScreen() {

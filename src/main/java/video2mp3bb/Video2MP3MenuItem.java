@@ -63,8 +63,8 @@ public class Video2MP3MenuItem extends ApplicationMenuItem {
 
         final Video2MP3Screen screen = app.getScreen();
         final Runnable runnable = new SetUrlRunnable(screen, url);
-        app.invokeAndWait(runnable);
         app.requestForeground();
+        app.invokeAndWait(runnable);
         return true;
     }
 
