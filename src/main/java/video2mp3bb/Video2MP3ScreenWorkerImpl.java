@@ -14,20 +14,23 @@ public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
         field.setFocus();
     }
 
-    public void handleUrl(String url) {
+    public void handleUrl(String url, boolean hq) {
         final BrowserSession session = Browser.getDefaultSession();
-        final String video2mp3Url = urlToVideo2MP3Url(url);
+        final String video2mp3Url = urlToVideo2MP3Url(url, hq);
         session.displayPage(video2mp3Url);
     }
+    
+    public void cleanup() {
+    }
 
-    public void userSelectedUrl(Video2MP3Screen screen, String url) {
+    public void userSelectedUrl(Video2MP3Screen screen, String url, final boolean hq) {
         final String urlClean = cleanUrl(url);
         if (urlClean == null) {
             this.handleInvalidUrl(screen, url);
         } else {
             new Thread() {
                 public void run() {
-                    Video2MP3ScreenWorkerImpl.this.handleUrl(urlClean);
+                    Video2MP3ScreenWorkerImpl.this.handleUrl(urlClean, hq);
                 }
             }.start();
         }
@@ -43,7 +46,7 @@ public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
         return url;
     }
 
-    public static String urlToVideo2MP3Url(String url) {
+    public static String urlToVideo2MP3Url(String url, boolean hq) {
         final StringBuffer sb = new StringBuffer();
         sb.append("http://www.video2mp3.net/index.php?url=");
 
@@ -66,7 +69,9 @@ public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
             sb.append(videoId);
         }
 
-        sb.append("&hq=1");
+        if (hq) {
+            sb.append("&hq=1");
+        }
 
         final String video2mp3Url = sb.toString();
         return video2mp3Url;
