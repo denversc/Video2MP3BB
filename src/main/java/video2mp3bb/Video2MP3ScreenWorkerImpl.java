@@ -9,6 +9,8 @@ import net.rim.blackberry.api.browser.BrowserSession;
 public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
 
     public void cleanup() {
+        Main.runCleanups();
+        System.exit(0);
     }
 
     public void handleInvalidUrl(Video2MP3Screen screen, String url) {

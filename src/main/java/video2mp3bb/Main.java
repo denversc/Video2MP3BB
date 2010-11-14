@@ -32,15 +32,25 @@ public class Main implements Runnable {
     }
 
     public void runInit() {
+        ApplicationDescriptor descriptor;
+        try {
+            descriptor = getDescriptor();
+        } catch (final Throwable e) {
+            descriptor = null;
+        }
+
         final Video2MP3MenuItem menuItem = new Video2MP3MenuItem();
         final ApplicationMenuItemRepository amir = ApplicationMenuItemRepository.getInstance();
-        amir.addMenuItem(ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem);
+        amir.addMenuItem(ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem, descriptor);
         addCleanup(new RemoveApplicationMenuItemRunnable(
             ApplicationMenuItemRepository.MENUITEM_BROWSER, menuItem));
     }
 
     public void runNormal() {
-        new Video2MP3BBApplication().enterEventDispatcher();
+        final Video2MP3BBApplication app = new Video2MP3BBApplication();
+        final TransientData data = getTransientData();
+        data.setApplication(app);
+        app.enterEventDispatcher();
     }
 
     public static void addCleanup(Runnable runnable) {
@@ -51,32 +61,23 @@ public class Main implements Runnable {
         data.addCleanup(runnable);
     }
 
-    private static TransientData getTransientData() {
-        return getTransientData(true);
-    }
-
-    private static TransientData getTransientData(boolean createIfNotExists) {
-        final RuntimeStore runtimeStore = RuntimeStore.getRuntimeStore();
-        final Object instance = runtimeStore.get(GUID_TRANSIENT_DATA);
-        if (instance instanceof TransientData) {
-            return (TransientData) instance;
-        } else if (!createIfNotExists) {
-            return null;
+    public static ApplicationDescriptor getDescriptor() throws ApplicationManagerException {
+        final int handle = CodeModuleManager.getModuleHandleForClass(Main.class);
+        String moduleName;
+        try {
+            moduleName = CodeModuleManager.getModuleName(handle);
+        } catch (final IllegalArgumentException e) {
+            throw new ApplicationManagerException("module " + handle + " not found");
+        }
+        if (moduleName == null) {
+            moduleName = Integer.toString(handle);
         }
 
-        final TransientData data = new TransientData();
-        runtimeStore.put(GUID_TRANSIENT_DATA, data);
-        data.addCleanup(new RemoveTransientDataFromRuntimeStoreRunnable());
-        return data;
-    }
-
-    public static boolean launchApplication() throws ApplicationManagerException {
-        final int handle = CodeModuleManager.getModuleHandleForClass(Main.class);
         ApplicationDescriptor[] descriptors;
         try {
             descriptors = CodeModuleManager.getApplicationDescriptors(handle);
         } catch (final IllegalArgumentException e) {
-            throw new ApplicationManagerException("module not found");
+            descriptors = null;
         }
 
         ApplicationDescriptor descriptor = null;
@@ -94,9 +95,33 @@ public class Main implements Runnable {
         }
 
         if (descriptor == null) {
-            throw new ApplicationManagerException("no descriptors for module");
+            throw new ApplicationManagerException("descriptor not found in module " + moduleName);
         }
 
+        return descriptor;
+    }
+
+    public static TransientData getTransientData() {
+        return getTransientData(true);
+    }
+
+    public static TransientData getTransientData(boolean createIfNotExists) {
+        final RuntimeStore runtimeStore = RuntimeStore.getRuntimeStore();
+        final Object instance = runtimeStore.get(GUID_TRANSIENT_DATA);
+        if (instance instanceof TransientData) {
+            return (TransientData) instance;
+        } else if (!createIfNotExists) {
+            return null;
+        }
+
+        final TransientData data = new TransientData();
+        runtimeStore.put(GUID_TRANSIENT_DATA, data);
+        data.addCleanup(new RemoveTransientDataFromRuntimeStoreRunnable());
+        return data;
+    }
+
+    public static boolean launch() throws ApplicationManagerException {
+        final ApplicationDescriptor descriptor = getDescriptor();
         final ApplicationManager am = ApplicationManager.getApplicationManager();
         final int pid = am.getProcessId(descriptor);
         am.runApplication(descriptor);
@@ -106,17 +131,6 @@ public class Main implements Runnable {
 
     public static void main(String[] args) {
         new Main(args).run();
-    }
-
-    public static void postSetUrlGlobalEvent(String url) throws ApplicationManagerException {
-        final boolean wasAlreadyRunning = launchApplication();
-        if (!wasAlreadyRunning) {
-            for (int i = 0; i < 20; i++) {
-                Thread.yield();
-            }
-        }
-        final ApplicationManager am = ApplicationManager.getApplicationManager();
-        am.postGlobalEvent(GUID_SET_URL, 0, 0, url, null);
     }
 
     public static void runCleanups() {

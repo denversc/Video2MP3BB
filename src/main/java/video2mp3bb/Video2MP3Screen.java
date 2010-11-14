@@ -14,6 +14,11 @@ import net.rim.device.api.ui.decor.BorderFactory;
 
 public class Video2MP3Screen extends MainScreen {
 
+    public static final String STR_DOWNLOAD;
+    static {
+        STR_DOWNLOAD = "Convert Video to MP3";
+    }
+
     private final Worker _worker;
     private final EditField _urlField;
     private final CheckboxField _hqCheckboxField;
@@ -42,7 +47,7 @@ public class Video2MP3Screen extends MainScreen {
                 | ButtonField.NEVER_DIRTY);
         this._selectButton.setRunnable(selectUrlMenuItem);
 
-        this.add(new LabelField("Enter the Url of the video to convert to MP3:"));
+        this.add(new LabelField("Enter the URL of the video to convert to MP3:"));
         this.add(this._urlField);
         this.add(this._hqCheckboxField);
         this.add(this._selectButton);
@@ -68,7 +73,7 @@ public class Video2MP3Screen extends MainScreen {
         return true;
     }
 
-    public void uesrSelectedCleanup() {
+    public void userSelectedCleanup() {
         this._worker.cleanup();
     }
 
@@ -85,15 +90,14 @@ public class Video2MP3Screen extends MainScreen {
         }
 
         public void run() {
-            Main.runCleanups();
-            System.exit(0);
+            Video2MP3Screen.this.userSelectedCleanup();
         }
     }
 
     private class SelectUrlMenuItem extends MenuItem {
 
         public SelectUrlMenuItem(int ordinal, int priority) {
-            super("Download MP3 from URL", ordinal, priority);
+            super(STR_DOWNLOAD, ordinal, priority);
         }
 
         public void run() {

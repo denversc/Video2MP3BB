@@ -8,7 +8,6 @@
  */
 package video2mp3bb;
 
-import net.rim.device.api.system.GlobalEventListener;
 import net.rim.device.api.ui.UiApplication;
 
 public class Video2MP3BBApplication extends UiApplication {
@@ -21,16 +20,7 @@ public class Video2MP3BBApplication extends UiApplication {
         this.pushScreen(this._screen);
     }
 
-    public void setUrlOnScreen(String url) {
-        this._screen.getUrlField().setText(url);
-        this._screen.getUrlField().setFocus();
-    }
-
-    private class MyGlobalEventListener implements GlobalEventListener {
-        public void eventOccurred(long guid, int data0, int data1, Object object0, Object object1) {
-            if (object0 instanceof String) {
-                Video2MP3BBApplication.this.setUrlOnScreen((String) object0);
-            }
-        }
+    public Video2MP3Screen getScreen() {
+        return this._screen;
     }
 }
