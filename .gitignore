@@ -7,4 +7,6 @@
 *.jad
 *.jar
 *.rapc
+*.manifest.xml
+*.wts
 ~*~

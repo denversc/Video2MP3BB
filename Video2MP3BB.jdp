@@ -19,6 +19,7 @@ AutoRestart=0
 ]
 [DependsOn
 ]
+Description=Converts online videos to MP3 using www.video2mp3.net
 ExcludeFromBuildAll=0
 Exported=0
 [Files
@@ -42,7 +43,7 @@ HaveImports=0
 [Imports
 ]
 Listing=0
-Options=-quiet
+Options=-quiet 
 OutputFileName=Video2MP3BB
 [PackageProtection
 ]
@@ -53,4 +54,7 @@ RunOnStartup=0
 SkipCompile=0
 StartupTier=7
 SystemModule=0
+Title=Video2MP3
 Type=0
+Vendor=Denver Coneybeare
+Version=1.0.0
