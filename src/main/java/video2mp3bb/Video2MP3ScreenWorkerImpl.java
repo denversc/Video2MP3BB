@@ -8,6 +8,9 @@ import net.rim.blackberry.api.browser.BrowserSession;
 
 public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
 
+    public void cleanup() {
+    }
+
     public void handleInvalidUrl(Video2MP3Screen screen, String url) {
         Dialog.alert("Invalid URL");
         final Field field = screen.getUrlField();
@@ -18,9 +21,6 @@ public class Video2MP3ScreenWorkerImpl implements Video2MP3Screen.Worker {
         final BrowserSession session = Browser.getDefaultSession();
         final String video2mp3Url = urlToVideo2MP3Url(url, hq);
         session.displayPage(video2mp3Url);
-    }
-    
-    public void cleanup() {
     }
 
     public void userSelectedUrl(Video2MP3Screen screen, String url, final boolean hq) {

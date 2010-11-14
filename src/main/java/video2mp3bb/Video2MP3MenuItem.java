@@ -5,7 +5,7 @@ import net.rim.device.api.ui.component.Dialog;
 import net.rim.blackberry.api.menuitem.ApplicationMenuItem;
 
 public class Video2MP3MenuItem extends ApplicationMenuItem {
-    
+
     public Video2MP3MenuItem() {
         super(0);
     }
@@ -14,13 +14,13 @@ public class Video2MP3MenuItem extends ApplicationMenuItem {
         if (context instanceof String) {
             try {
                 Main.postSetUrlGlobalEvent((String) context);
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 Dialog.alert("ERROR: " + e);
             }
         } else {
             Dialog.alert("Unknown Object: " + context);
         }
-        
+
         return null;
     }
 

@@ -17,6 +17,7 @@ public class Video2MP3Screen extends MainScreen {
     private final Worker _worker;
     private final EditField _urlField;
     private final CheckboxField _hqCheckboxField;
+    private final ButtonField _selectButton;
 
     public Video2MP3Screen(Worker worker) {
         if (worker == null) {
@@ -36,23 +37,23 @@ public class Video2MP3Screen extends MainScreen {
 
         this._hqCheckboxField = new CheckboxField("High Quality", true);
 
-        final ButtonField selectButton =
+        this._selectButton =
             new ButtonField(selectUrlMenuItem.toString(), ButtonField.CONSUME_CLICK
                 | ButtonField.NEVER_DIRTY);
-        selectButton.setRunnable(selectUrlMenuItem);
+        this._selectButton.setRunnable(selectUrlMenuItem);
 
         this.add(new LabelField("Enter the Url of the video to convert to MP3:"));
         this.add(this._urlField);
         this.add(this._hqCheckboxField);
-        this.add(selectButton);
-    }
-    
-    protected boolean onSavePrompt() {
-        return true;
+        this.add(this._selectButton);
     }
 
     public CheckboxField getHighQualityField() {
         return this._hqCheckboxField;
+    }
+
+    public ButtonField getSelectButtonField() {
+        return this._selectButton;
     }
 
     public EditField getUrlField() {
@@ -61,6 +62,10 @@ public class Video2MP3Screen extends MainScreen {
 
     public Worker getWorker() {
         return this._worker;
+    }
+
+    protected boolean onSavePrompt() {
+        return true;
     }
 
     public void uesrSelectedCleanup() {
