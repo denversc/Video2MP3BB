@@ -28,9 +28,12 @@ public class TransientData {
         }
 
         if (ref != null) {
-            final Video2MP3BBApplication app = (Video2MP3BBApplication) ref.get();
-            if (app.isAlive()) {
-                return app;
+            final Object referent = ref.get();
+            if (referent instanceof Video2MP3BBApplication) {
+                final Video2MP3BBApplication app = (Video2MP3BBApplication) referent;
+                if (app.isAlive()) {
+                    return app;
+                }
             }
         }
 
