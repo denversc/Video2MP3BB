@@ -40,7 +40,7 @@ public class Video2MP3MenuItem extends ApplicationMenuItem {
             final TransientData data = Main.getTransientData();
             app = data.getApplication();
 
-            if (app == null || !app.isAlive()) {
+            if (app == null) {
                 try {
                     Main.launch();
                 } catch (final Throwable e) {
@@ -48,8 +48,10 @@ public class Video2MP3MenuItem extends ApplicationMenuItem {
                     return false;
                 }
 
-                for (int i = 0; i < 100 && app == null; i++) {
-                    app = data.getApplication();
+                try {
+                    app = data.waitForApplication(2000L);
+                } catch (final InterruptedException e) {
+                    // oh well
                 }
             }
         }

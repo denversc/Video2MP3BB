@@ -7,9 +7,11 @@ public class TransientData {
 
     private final Vector _cleanups;
     private WeakReference _applicationRef;
+    private final Object _applicationRefMutex;
 
     public TransientData() {
         this._cleanups = new Vector();
+        this._applicationRefMutex = new Object();
     }
 
     public void addCleanup(Runnable runnable) {
@@ -20,7 +22,19 @@ public class TransientData {
     }
 
     public Video2MP3BBApplication getApplication() {
-        return (Video2MP3BBApplication) this._applicationRef.get();
+        final WeakReference ref;
+        synchronized (this._applicationRefMutex) {
+            ref = this._applicationRef;
+        }
+
+        if (ref != null) {
+            final Video2MP3BBApplication app = (Video2MP3BBApplication) ref.get();
+            if (app.isAlive()) {
+                return app;
+            }
+        }
+
+        return null;
     }
 
     public Runnable[] getCleanups(boolean removeAll) {
@@ -35,7 +49,23 @@ public class TransientData {
     }
 
     public void setApplication(Video2MP3BBApplication application) {
-        this._applicationRef = new WeakReference(application);
+        final WeakReference ref = new WeakReference(application);
+        synchronized (this._applicationRefMutex) {
+            this._applicationRef = ref;
+            if (application != null) {
+                this._applicationRefMutex.notifyAll();
+            }
+        }
     }
 
+    public Video2MP3BBApplication waitForApplication(long timeout) throws InterruptedException {
+        synchronized (this._applicationRefMutex) {
+            Video2MP3BBApplication app = this.getApplication();
+            if (app == null) {
+                this._applicationRefMutex.wait(timeout);
+            }
+            app = this.getApplication();
+            return app;
+        }
+    }
 }
