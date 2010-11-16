@@ -19,10 +19,11 @@ AutoRestart=0
 ]
 [DependsOn
 ]
-Description=Converts online videos to MP3 using www.video2mp3.net
+Description=Converts online videos to MP3 using http://www.video2mp3.net
 ExcludeFromBuildAll=0
 Exported=0
 [Files
+src\main\java\video2mp3bb\AboutScreen.java
 src\main\java\video2mp3bb\Main.java
 src\main\java\video2mp3bb\runnables\DialogAlertRunnable.java
 src\main\java\video2mp3bb\runnables\PushScreenRunnable.java

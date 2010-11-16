@@ -1,47 +1,57 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.denverconeybeare</groupId>
-  <artifactId>Video2MP3BB</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.denverconeybeare</groupId>
+	<artifactId>Video2MP3BB</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-  <name>Video2MP3BB</name>
-  <url>http://maven.apache.org</url>
+	<name>Video2MP3BB</name>
+	<description>A handy little application that makes it easier to convert online videos to MP3 using the www.video2mp3.net service</description>
+	<url>https://github.com/denversc/Video2MP3BB</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <build>
-  	<plugins>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-compiler-plugin</artifactId>
-  			<version>2.3.2</version>
-  			<configuration>
-  			   <source>1.6</source>
-  			   <target>1.6</target>
-  			</configuration>
-  		</plugin>
-  	</plugins>
-  </build>
-  <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.8.2</version>
-  		<type>jar</type>
-  		<scope>test</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>rim</groupId>
-  		<artifactId>blackberry</artifactId>
-  		<version>6.0.0</version>
-  		<type>jar</type>
-  		<scope>system</scope>
-  		<systemPath>${env.RIM_API_JAR}</systemPath>
-  	</dependency>
-  </dependencies>
+	<licenses>
+		<license>
+			<name>GNU General Public License Version 3</name>
+			<url>http://www.gnu.org/licenses</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<inceptionYear>2010</inceptionYear>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>rim</groupId>
+			<artifactId>blackberry</artifactId>
+			<version>6.0.0</version>
+			<type>jar</type>
+			<scope>system</scope>
+			<systemPath>${env.RIM_API_JAR}</systemPath>
+		</dependency>
+	</dependencies>
 </project>

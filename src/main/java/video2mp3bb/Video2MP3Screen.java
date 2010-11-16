@@ -1,3 +1,23 @@
+/*
+ * Video2MP3Screen.java
+ * 
+ * Copyright 2010 Denver Coneybeare
+ * 
+ * This file is part of Video2MP3BB.
+ *
+ * Video2MP3BB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Video2MP3BB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Video2MP3BB.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package video2mp3bb;
 
 import net.rim.device.api.ui.MenuItem;
@@ -34,6 +54,7 @@ public class Video2MP3Screen extends MainScreen {
         final MenuItem selectUrlMenuItem = new SelectUrlMenuItem(0x00010000, 0);
         this.addMenuItem(selectUrlMenuItem);
         this.addMenuItem(new CleanupsMenuItem(0x00010000 * 2, 0));
+        this.addMenuItem(new AboutMenuItem(0x00010000 * 3, 0));
 
         this._urlField =
             new EditField(null, null, TextField.DEFAULT_MAXCHARS, BasicEditField.FILTER_URL);
@@ -73,6 +94,10 @@ public class Video2MP3Screen extends MainScreen {
         return true;
     }
 
+    public void userSelectedAbout() {
+        this._worker.about();
+    }
+
     public void userSelectedCleanup() {
         this._worker.cleanup();
     }
@@ -81,6 +106,17 @@ public class Video2MP3Screen extends MainScreen {
         final String url = this.getUrlField().getText();
         final boolean hq = this.getHighQualityField().getChecked();
         this._worker.userSelectedUrl(this, url, hq);
+    }
+
+    private class AboutMenuItem extends MenuItem {
+
+        public AboutMenuItem(int ordinal, int priority) {
+            super("About", ordinal, priority);
+        }
+
+        public void run() {
+            Video2MP3Screen.this.userSelectedAbout();
+        }
     }
 
     private class CleanupsMenuItem extends MenuItem {
@@ -106,6 +142,8 @@ public class Video2MP3Screen extends MainScreen {
     }
 
     public static interface Worker {
+
+        public void about();
 
         public void cleanup();
 

@@ -1,3 +1,23 @@
+/*
+ * Main.java
+ * 
+ * Copyright 2010 Denver Coneybeare
+ * 
+ * This file is part of Video2MP3BB.
+ *
+ * Video2MP3BB is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Video2MP3BB is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Video2MP3BB.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package video2mp3bb;
 
 import video2mp3bb.runnables.DialogAlertRunnable;
@@ -21,8 +41,22 @@ public class Main implements Runnable {
     public static final long GUID_SET_URL = 0x7d88cfb7d2e045bcL;
 
     public static final String ARG_INIT;
+    public static final String LICENSE;
+
     static {
         ARG_INIT = "init";
+
+        LICENSE =
+            "Copyright 2010 Denver Coneybeare\n\n"
+                + "Video2MP3BB is free software: you can redistribute it and/or modify it under "
+                + "the terms of the GNU General Public License as published by the Free Software "
+                + "Foundation, either version 3 of the License, or (at your option) any later "
+                + "version.\n\n"
+                + "Video2MP3BB is distributed in the hope that it will be useful, but WITHOUT ANY"
+                + "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR"
+                + "A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\n"
+                + "You should have received a copy of the GNU General Public License along with "
+                + "Video2MP3BB.  If not, see http://www.gnu.org/licenses/.";
     }
 
     private final String[] _args;
